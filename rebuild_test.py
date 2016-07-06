@@ -2,7 +2,7 @@ import time
 from threading import Thread
 
 from cassandra import ConsistencyLevel
-from ccmlib.node import NodetoolError
+from ccmlib.node import ToolError
 
 from dtest import Tester
 from tools import insert_c1c2, known_failure, query_c1c2, since
@@ -81,7 +81,7 @@ class TestRebuild(Tester):
         def rebuild():
             try:
                 node2.nodetool('rebuild dc1')
-            except NodetoolError as e:
+            except ToolError as e:
                 if 'Node is still rebuilding' in e.message:
                     self.rebuild_errors += 1
 
@@ -93,7 +93,7 @@ class TestRebuild(Tester):
         time.sleep(.1)
         try:
             node2.nodetool('rebuild dc1')
-        except NodetoolError:
+        except ToolError:
             self.rebuild_errors += 1
 
         cmd1.join()
